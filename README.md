@@ -2,6 +2,9 @@
 
 Upload a document and read in fixed-focus RSVP style.
 
+## Live app
+- https://trenn1x.github.io/flashread-rsvp/
+
 ## Supported inputs
 - PDF (`.pdf`)
 - Word (`.docx`)
