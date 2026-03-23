@@ -9,6 +9,35 @@
   --line: rgba(201, 218, 242, 0.18);
   --surface-soft: rgba(255, 255, 255, 0.04);
   --control-bg: rgba(18, 28, 43, 0.95);
+  --reader-surface-top: #19263a;
+  --reader-surface-bottom: #0e1726;
+  --focus-guide: rgba(214, 226, 246, 0.28);
+  --pivot-text: #140f09;
+  --pivot-bg: rgba(255, 190, 120, 0.9);
+  color-scheme: dark;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+  --bg-top: #dce7f3;
+  --bg-bottom: #eaf1f8;
+  --panel: rgba(250, 252, 255, 0.92);
+  --ink: #15202f;
+  --muted: #4f6177;
+  --accent: #c66a2a;
+  --accent-ink: #7a3409;
+  --line: rgba(18, 33, 52, 0.18);
+  --surface-soft: rgba(16, 34, 54, 0.05);
+  --control-bg: rgba(245, 248, 252, 0.98);
+  --reader-surface-top: #f8fbff;
+  --reader-surface-bottom: #eef4fb;
+  --focus-guide: rgba(22, 38, 59, 0.23);
+  --pivot-text: #2f1908;
+  --pivot-bg: rgba(252, 194, 138, 0.85);
+  color-scheme: light;
 }
 
 * {
@@ -27,6 +56,7 @@ body {
   background: radial-gradient(circle at 15% 10%, #243247 0%, transparent 50%),
     radial-gradient(circle at 82% 84%, #1e2d41 0%, transparent 45%),
     linear-gradient(160deg, var(--bg-top), var(--bg-bottom));
+  transition: background 220ms ease, color 220ms ease;
 }
 
 .bg-grid {
@@ -60,6 +90,7 @@ body {
   box-shadow: 0 12px 30px rgba(3, 6, 10, 0.48);
   padding: 18px;
   backdrop-filter: blur(6px);
+  transition: background 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
 }
 
 h1 {
@@ -128,7 +159,11 @@ h1 {
 .reader-surface {
   position: relative;
   border: 1px solid var(--line);
-  background: radial-gradient(circle at 50% 50%, #19263a 0%, #0e1726 100%);
+  background: radial-gradient(
+    circle at 50% 50%,
+    var(--reader-surface-top) 0%,
+    var(--reader-surface-bottom) 100%
+  );
   border-radius: 16px;
   min-height: 260px;
   display: grid;
@@ -145,7 +180,7 @@ h1 {
   top: 20%;
   bottom: 20%;
   width: 1px;
-  background: rgba(214, 226, 246, 0.28);
+  background: var(--focus-guide);
 }
 
 .focus-guides::before {
@@ -167,8 +202,8 @@ h1 {
 }
 
 .flash-word .pivot {
-  color: #140f09;
-  background: rgba(255, 190, 120, 0.9);
+  color: var(--pivot-text);
+  background: var(--pivot-bg);
   border-radius: 4px;
   padding: 0 2px;
 }
@@ -177,6 +212,12 @@ h1 {
   margin-top: 14px;
   display: grid;
   gap: 12px;
+}
+
+.theme-row {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .mode-row,

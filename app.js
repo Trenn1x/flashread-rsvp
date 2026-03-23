@@ -2,12 +2,17 @@ const state = {
   rawText: "",
   units: [],
   mode: "word",
+  themeChoice: "auto",
   index: 0,
   wpm: 300,
   playing: false,
   timerId: null,
   touchStart: null,
 };
+
+const THEME_STORAGE_KEY = "flashread-theme-choice";
+const VALID_THEME_CHOICES = new Set(["auto", "dark", "light"]);
+const systemThemeQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
 const els = {
   fileInput: document.getElementById("fileInput"),
@@ -24,6 +29,7 @@ const els = {
   progressValue: document.getElementById("progressValue"),
   statusToast: document.getElementById("statusToast"),
   modeButtons: [...document.querySelectorAll(".chip[data-mode]")],
+  themeButtons: [...document.querySelectorAll(".chip[data-theme-choice]")],
   dropzone: document.getElementById("dropzone"),
 };
 
@@ -115,6 +121,61 @@ function showToast(message) {
   showToast.timerId = window.setTimeout(() => {
     els.statusToast.classList.remove("visible");
   }, 900);
+}
+
+function readSavedThemeChoice() {
+  try {
+    const saved = localStorage.getItem(THEME_STORAGE_KEY);
+    return VALID_THEME_CHOICES.has(saved) ? saved : "auto";
+  } catch {
+    return "auto";
+  }
+}
+
+function themeLabel(choice) {
+  return choice.charAt(0).toUpperCase() + choice.slice(1);
+}
+
+function resolveTheme(choice) {
+  if (choice === "auto") {
+    return systemThemeQuery.matches ? "dark" : "light";
+  }
+
+  return choice;
+}
+
+function updateThemeButtonState() {
+  els.themeButtons.forEach((button) => {
+    button.classList.toggle("active", button.dataset.themeChoice === state.themeChoice);
+  });
+}
+
+function applyTheme(choice, options = {}) {
+  const { persist = true, announce = true } = options;
+  if (!VALID_THEME_CHOICES.has(choice)) return;
+
+  state.themeChoice = choice;
+  const resolvedTheme = resolveTheme(choice);
+  document.documentElement.dataset.theme = resolvedTheme;
+  updateThemeButtonState();
+
+  if (persist) {
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, choice);
+    } catch {
+      // Ignore localStorage write errors.
+    }
+  }
+
+  if (announce) {
+    const suffix = choice === "auto" ? ` (${themeLabel(resolvedTheme)})` : "";
+    showToast(`Theme: ${themeLabel(choice)}${suffix}`);
+  }
+}
+
+function handleSystemThemeChange() {
+  if (state.themeChoice !== "auto") return;
+  applyTheme("auto", { persist: false, announce: false });
 }
 
 function stepDelayMs(token) {
@@ -351,6 +412,12 @@ els.modeButtons.forEach((button) => {
   button.addEventListener("click", () => setMode(button.dataset.mode));
 });
 
+els.themeButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    applyTheme(button.dataset.themeChoice);
+  });
+});
+
 els.readerSurface.addEventListener("pointerdown", (event) => {
   els.readerSurface.setPointerCapture(event.pointerId);
   state.touchStart = {
@@ -427,6 +494,13 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
+if (typeof systemThemeQuery.addEventListener === "function") {
+  systemThemeQuery.addEventListener("change", handleSystemThemeChange);
+} else if (typeof systemThemeQuery.addListener === "function") {
+  systemThemeQuery.addListener(handleSystemThemeChange);
+}
+
+applyTheme(readSavedThemeChoice(), { persist: false, announce: false });
 updatePlayButton();
 updateProgressUI();
 updateSpeedUI();
