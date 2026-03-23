@@ -1,0 +1,10 @@
+FlashRead Sample Passage
+
+This is a short file designed for RSVP testing.
+Start at 250 to 320 words per minute.
+Then try swipe right to speed up, or tap left to rewind.
+You can keep your eyes locked on one focal point,
+while each word flashes in place.
+
+Fast reading works best when punctuation adds tiny pauses.
+This sentence has commas, periods, and a question mark: can you feel the rhythm?

@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FlashRead RSVP</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=IBM+Plex+Mono:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script defer src="https://unpkg.com/mammoth@1.10.0/mammoth.browser.min.js"></script>
+    <script defer src="./app.js"></script>
+  </head>
+  <body>
+    <div class="bg-grid" aria-hidden="true"></div>
+    <main class="app-shell">
+      <section class="panel upload-panel">
+        <h1>FlashRead RSVP</h1>
+        <p class="subtitle">
+          Upload a <strong>PDF</strong>, <strong>DOCX</strong>, <strong>TXT</strong>,
+          or <strong>MD</strong> file and read from one fixed focal point.
+        </p>
+
+        <label class="dropzone" id="dropzone" for="fileInput">
+          <input
+            id="fileInput"
+            type="file"
+            accept=".pdf,.docx,.txt,.md,text/plain,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+          />
+          <span class="drop-head">Drop file here or tap to upload</span>
+          <span class="drop-sub">Supported: PDF, DOCX, TXT, MD</span>
+        </label>
+
+        <div class="meta">
+          <div><span class="label">File</span><span id="fileName">None</span></div>
+          <div><span class="label">Units</span><span id="unitCount">0</span></div>
+        </div>
+      </section>
+
+      <section class="panel reader-panel">
+        <div id="readerSurface" class="reader-surface" tabindex="0">
+          <div class="focus-guides" aria-hidden="true"></div>
+          <div id="flashWord" class="flash-word">Upload a file</div>
+          <div id="statusToast" class="toast" aria-live="polite"></div>
+        </div>
+
+        <div class="controls">
+          <div class="mode-row">
+            <button class="chip active" data-mode="word" type="button">Word Mode</button>
+            <button class="chip" data-mode="letter" type="button">Letter Mode</button>
+          </div>
+
+          <div class="buttons-row">
+            <button id="rewindBtn" type="button">&lt;&lt; -10</button>
+            <button id="playPauseBtn" type="button">Play</button>
+            <button id="forwardBtn" type="button">+10 &gt;&gt;</button>
+          </div>
+
+          <div class="slider-row">
+            <label for="speedRange">Speed</label>
+            <input id="speedRange" type="range" min="80" max="900" step="10" value="300" />
+            <output id="speedValue">300 WPM</output>
+          </div>
+
+          <div class="slider-row">
+            <label for="progressRange">Progress</label>
+            <input id="progressRange" type="range" min="0" max="0" value="0" />
+            <output id="progressValue">0 / 0</output>
+          </div>
+
+          <p class="touch-help">
+            Touch controls: tap <strong>left</strong> to rewind, <strong>center</strong>
+            to play/pause, <strong>right</strong> to forward. Swipe horizontally to change speed.
+          </p>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
